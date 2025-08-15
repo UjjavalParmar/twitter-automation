@@ -12,17 +12,3 @@ COPY --from=build /bin/bot /bin/bot
 COPY .env .env
 VOLUME ["/data"]
 ENTRYPOINT ["/bin/bot"]
-
-
-# FROM golang:1.24
-#
-# WORKDIR /app
-#
-# COPY . .
-#
-# RUN go mod tidy && \
-#     go build ./cmd/bot/main.go
-#
-# EXPOSE 8080
-#
-# CMD ["./main"]
