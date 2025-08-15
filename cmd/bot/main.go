@@ -60,7 +60,7 @@ func main() {
 	//
 	// tweet, err := genr.ComposeTweet(
 	// 		context.Background(),
-	// 		"AI in DevOps", // topic
+	// 		"AI in DevOps and job openings in india", // topic
 	// 		"casual",       // style
 	// )
 	// if err != nil {
@@ -68,7 +68,7 @@ func main() {
 	// }
 	//
 	// log.Info().Str("tweet", tweet).Msg("Generated test tweet")
-	//
+
 
 	// Prepare Twitter client with creds
 	httpClient := &http.Client{}
