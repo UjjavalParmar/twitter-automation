@@ -1,0 +1,61 @@
+name: x-automation-pipeline
+
+on:
+  push:
+    branches:
+      - release-development
+  pull_request:
+    branches:
+      - release-development
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24' # match your go.mod version
+
+      - name: Install dependencies
+        run: go mod download
+
+      # Uncomment if you want tests
+      # - name: Run tests
+      #   run: go test ./... -v
+
+      - name: Build binary
+        run: go build -v ./cmd/bot
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/release-development'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get latest commit message
+        id: commit
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%s)
+          SANITIZED_TAG=$(echo "$COMMIT_MSG" | tr ' ' '-' | tr -cd '[:alnum:]-')
+          echo "tag=$SANITIZED_TAG" >> $GITHUB_ENV
+
+      - name: Log in to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ujjaval/devops-practice:x-automation-${{ env.tag }}
+
