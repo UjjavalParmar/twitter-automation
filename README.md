@@ -24,26 +24,6 @@ The bot uses AI to compose tweets and replies, stores posting history to avoid d
 
 ---
 
-## 🛠 Project Structure
-
-.
-├── cmd/ # Main application entry point
-│ └── main.go
-├── internal/
-│ ├── config/ # Configuration loading
-│ ├── gen/ # AI content generation (Gemini API)
-│ ├── logging/ # Structured logging (zerolog)
-│ ├── scheduler/ # Scheduling tweet posting times
-│ ├── selector/ # Random topic/style selectors
-│ ├── storage/ # Local storage for posted/replied tweets
-│ ├── xclient/ # Twitter API (X API) client
-├── go.mod
-├── go.sum
-└── .env # Environment variables
-
-
----
-
 ## ⚙️ Requirements
 
 - Go 1.24+
