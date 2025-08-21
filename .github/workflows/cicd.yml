@@ -58,4 +58,3 @@ jobs:
           context: .
           push: true
           tags: ujjaval/devops-practice:x-automation-${{ env.tag }}
-
