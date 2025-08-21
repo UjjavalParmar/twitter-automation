@@ -5,7 +5,7 @@ The bot uses AI to compose tweets and replies, stores posting history to avoid d
 
 ---
 
-## ✨ Features
+## Features
 
 - **AI-Powered Tweet Generation**
   Uses Google Gemini API to compose tweets and replies in different styles and languages.
@@ -24,12 +24,12 @@ The bot uses AI to compose tweets and replies, stores posting history to avoid d
 
 ---
 
-## ⚙️ Requirements
+## Requirements
 
 - Go 1.24+
 - Twitter/X Developer API credentials
 - Google Gemini API key
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License.
