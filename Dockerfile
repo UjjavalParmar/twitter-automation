@@ -9,7 +9,7 @@ FROM gcr.io/distroless/base-debian12
 # ENV TZ=Asia/Kolkata
 WORKDIR /app
 COPY --from=build /bin/bot /bin/bot
-COPY .env .env
+# COPY .env .env
 VOLUME ["/data"]
 ENTRYPOINT ["/bin/bot"]
 
