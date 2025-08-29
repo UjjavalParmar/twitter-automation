@@ -3,6 +3,7 @@ package xclient
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/dghubble/oauth1"
@@ -133,3 +134,35 @@ func (c *Client) Reply(tweetID string, text string) (string, error) {
 	return resp.Data.ID, nil
 }
 
+// GetTweets fetches tweets by IDs with public metrics.
+func (c *Client) GetTweets(ids []string) ([]Tweet, error) {
+	if len(ids) == 0 {
+		return nil, nil
+	}
+	var all []Tweet
+	for start := 0; start < len(ids); start += 100 {
+		end := start + 100
+		if end > len(ids) {
+			end = len(ids)
+		}
+		batch := ids[start:end]
+		var resp struct {
+			Data []Tweet `json:"data"`
+		}
+		r, err := c.rest.R().
+			SetQueryParams(map[string]string{
+				"ids":          strings.Join(batch, ","),
+				"tweet.fields": "public_metrics",
+			}).
+			SetResult(&resp).
+			Get("/tweets")
+		if err != nil {
+			return nil, err
+		}
+		if r.IsError() {
+			return nil, fmt.Errorf("get tweets failed: %s - %s", r.Status(), r.String())
+		}
+		all = append(all, resp.Data...)
+	}
+	return all, nil
+}

@@ -69,3 +69,52 @@ func (s *Store) IsSeen(id string) (bool, error) {
 	})
 	return seen, err
 }
+
+// AddPostedID records an ID of a tweet we posted (for stats/metrics).
+func (s *Store) AddPostedID(id string) error {
+	return s.db.Update(func(txn *badger.Txn) error {
+		return txn.Set([]byte("postedid:"+id), []byte("1"))
+	})
+}
+
+// AddReplyID records an ID of a reply we posted.
+func (s *Store) AddReplyID(id string) error {
+	return s.db.Update(func(txn *badger.Txn) error {
+		return txn.Set([]byte("replyid:"+id), []byte("1"))
+	})
+}
+
+// CountPrefix counts keys that start with the provided prefix.
+func (s *Store) CountPrefix(prefix string) (int, error) {
+	count := 0
+	err := s.db.View(func(txn *badger.Txn) error {
+		it := txn.NewIterator(badger.DefaultIteratorOptions)
+		defer it.Close()
+		p := []byte(prefix)
+		for it.Seek(p); it.ValidForPrefix(p); it.Next() {
+			count++
+		}
+		return nil
+	})
+	return count, err
+}
+
+// ListIDs lists keys by prefix and returns the suffix (ID) values up to limit.
+func (s *Store) ListIDs(prefix string, limit int) ([]string, error) {
+	var ids []string
+	err := s.db.View(func(txn *badger.Txn) error {
+		it := txn.NewIterator(badger.DefaultIteratorOptions)
+		defer it.Close()
+		p := []byte(prefix)
+		for it.Seek(p); it.ValidForPrefix(p); it.Next() {
+			if limit > 0 && len(ids) >= limit {
+				break
+			}
+			item := it.Item()
+			k := item.Key()
+			ids = append(ids, string(k[len(p):]))
+		}
+		return nil
+	})
+	return ids, err
+}
