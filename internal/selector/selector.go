@@ -28,3 +28,9 @@ func init() { rand.Seed(time.Now().UnixNano()) }
 
 func RandomTopicSet() []string { return topics[rand.Intn(len(topics))] }
 func RandomStyle() string      { return styles[rand.Intn(len(styles))] }
+
+// AllTopics returns the configured topic groups for UI selection.
+func AllTopics() [][]string { return topics }
+
+// AllStyles returns the configured styles for UI selection.
+func AllStyles() []string { return styles }
